@@ -1,0 +1,11 @@
+exe
+open_all.sh
+**.depend
+bin/**
+build/**
+obj/**
+**.layout
+**.out
+**.directory
+**.param
+**.kate-swp
