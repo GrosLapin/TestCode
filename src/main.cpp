@@ -24,7 +24,7 @@ int main() //int argc, char** argv)
       
         vector<int> a = { 4, 5 };
         
-        void foo ()   {
+       void foo () const  {
             cout << "for range" << endl;
             for (auto & v : a )
             {
@@ -35,9 +35,9 @@ int main() //int argc, char** argv)
             {
                 cout << " same const it " << std::is_same< vector<int>::const_iterator , decltype(it) >::value <<endl;
                 cout << " check const " << is_const< decltype(*it) >::value << endl;
-                cout << is_const<decltype(get_value<vector<int>>(it))>::value << endl;;
+                cout << is_const<decltype(get_value(it,a))>::value << endl;
             }
-        }
+       }
     };
     
     test d;

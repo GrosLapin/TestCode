@@ -113,6 +113,7 @@ struct is_map< std::unordered_map<T,U> >  : std::true_type {};
 
 
 /*
+ * TODO a regarde avec lénaic un jours
 template <template <class , class > class T, class = void >
 struct is_map : std::false_type {};
 template <template <class , class > class T, class Un, class Deux>
@@ -124,6 +125,9 @@ struct is_map<   T,
                                         >::type
             >  : std::true_type {};
 */
+
+
+
 
 template <class T, class U = void, class V = void>
 struct is_point : std::false_type {
@@ -145,5 +149,23 @@ struct is_point<   T,
             >  : std::true_type {};
 
 }
+
+
+
+
+
+template <class U, class... T>
+struct last_type
+{
+    using type = U;
+};
+
+template <class U, class UU , class... T>
+struct last_type<U,UU, T...> {
+  using type =  typename last_type<UU,T...>::type;
+};
+
+template <class U, class... T>
+using last_t = typename last_type<U,T...>::type;
 #endif
 
