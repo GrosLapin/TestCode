@@ -10,11 +10,34 @@
 #include <fstream>
 
 #include "traits.hpp"
-
+namespace std 
+{
+    // TODO Comprendre pourquoi ça marche pas :/
+    // la recherche a coup de find if dans uen map demande la comparaison entre pair 
+    template <class Pair,
+              class Pair2, 
+              class  = std::enable_if_t < 
+                            std::is_same < 
+                                        std::decay_t < typename Pair::first_type > ,
+                                        std::decay_t < typename Pair2::first_type >
+                                         > ::value
+                                        >,
+              class  = std::enable_if_t < 
+                            std::is_same < 
+                                        std::decay_t < typename Pair::second_type > ,
+                                        std::decay_t < typename Pair2::second_type >
+                                         >::value
+                                        >
+              >
+    bool operator==(const Pair& p1, const Pair2&  p2 )
+    {
+        return p1.first == p2.first && p1.second == p2.second;
+    } 
+}
 namespace testSFML 
 {
 
-        
+
     template < 	bool is_map , 
 				class T>
 	struct get_value_s
@@ -91,7 +114,7 @@ namespace testSFML
         return ok;
     }
     
-    // TODO faire une version generic map ou pas 
+ 
     template < class Conteneur1,
 			   class U> 
 	auto contain (const Conteneur1& conteneur1 , const U& value)
@@ -115,6 +138,47 @@ namespace testSFML
         }      
 
         return trouve;
+	}
+	
+	
+
+    
+
+	
+	// si on demande une map<key,val> et une pair<key,val> on fait une recherche
+	// normal :)
+	// le probleme est que le decay sur une pair ne match pas si la clée est const
+	// du coup je dois eclater la pair pour faire le decay
+	/*
+     *      cout << demangle (typeid(decltype (*m.begin())).name()) << endl;
+            cout << demangle ( typeid(std::decay_t<decltype (*m.begin())>).name())<< "   decay"  << endl;
+            cout << demangle ( typeid(decltype (std::pair<std::string,int>(std::string("d"),1))).name() ) << endl;
+     * 
+     *      std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int>
+            std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, int>   decay
+            std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int>
+
+     * 
+     */
+    
+
+	template < class Map,
+			   class U> 
+	auto contain (const Map& map1 , const U& value)
+         -> last_t <   std::enable_if_t <is_map<Map>::value>,
+                       std::enable_if_t<
+                                          std::is_same < std::decay_t<decltype (map1.begin()->first)>,
+                                                         std::decay_t<decltype (value.first)>
+                                                        >::value
+                                        >,
+                       std::enable_if_t<
+                                          std::is_same < std::decay_t<decltype (map1.begin()->second)>,
+                                                         std::decay_t<decltype (value.second)>
+                                                        >::value
+                                        >,
+                       bool>
+	{
+        return std::find(map1.begin(),map1.end(),value) != map1.end() ;
 	}
     
     

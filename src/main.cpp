@@ -7,12 +7,22 @@
 #include "fonction_conteneur.hpp"
 #include <set>
 
+
+
+#include <boost/core/demangle.hpp>
+#include <typeinfo>
+#include <iostream>
+
+template<class T> struct X
+{
+};
+
 using namespace testSFML;
 using std::cout;
 using std::endl;
 using std::map;
 using std::vector;
-
+using boost::core::demangle;
 template<class T>
 decltype(auto) foo(T&& t) { return t; }
 
@@ -46,6 +56,16 @@ int main() //int argc, char** argv)
     cout << "0 : " << contain(v,s) << endl;
     cout << "0 : " << contain(m,s) << endl;
     cout << "0 : " << contain(v,m) << endl;
+    
+    cout << " autres tests " << endl;
+    
+    std::vector<std::string> vs = { "a", "b", "r", "c" };
+    cout << "1 : " << contain(vs,std::string("r")) << endl;
+    cout << "1 : " << contain (m,std::pair<std::string,int>(std::string("d"),1)) << endl;;
+    cout << "1 : " << contain (std::string("(qdsf)"),'s') << endl;
+    cout << "0 : " << contain(vs,std::string("h")) << endl;
+    cout << "0 : " << contain (m,std::pair<std::string,int>(std::string("h"),1)) << endl;;
+    cout << "0 : " << contain (std::string("(qdsf)"),'h') << endl;
     /*
     cout << endl << endl <<  "test is_const " << endl <<  endl;
     struct test {
