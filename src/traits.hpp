@@ -101,7 +101,7 @@ struct is_string<   T,
             >  : std::true_type {};
 
 			
-			
+/*
 template <class T, class = void >
 struct is_map : std::false_type {};
 
@@ -110,12 +110,46 @@ struct is_map< std::map<T,U> >  : std::true_type {};
 
 template <class T, class U>
 struct is_map< std::unordered_map<T,U> >  : std::true_type {};
+*/
+
+/*
+ * TODO a regarde avec lénaic un jours*/
+
+
+
+template< class T , class = void>
+struct is_map2 : std::false_type {
+	is_map2 ()  { std::cout << ":( " << std::endl; }
+};
+
+template< template <class... > class T, class... a >
+struct is_map2 < T<a...> , 
+				 typename void_if_valide<typename std::enable_if<
+                                                                std::is_same< T<a...> ,std::map				<a...>>::value 
+                                                               
+                                                                >::type
+                                        >::type
+			  > : std::true_type {
+	is_map2 ()  { std::cout << ":) " << std::endl; }
+};
+
+template< template <class... > class T, class... a >
+struct is_map2 < T<a...> , 
+				 typename void_if_valide<typename std::enable_if<
+                                                                std::is_same< T<a...> ,std::unordered_map				<a...>>::value 
+                                                               
+                                                                >::type
+                                        >::type
+			  > : std::true_type {
+	is_map2 ()  { std::cout << ":) " << std::endl; }
+};
+
+template <class T>
+using is_map = is_map2< std::decay_t<T>>;
 
 
 /*
- * TODO a regarde avec lénaic un jours
-template <template <class , class > class T, class = void >
-struct is_map : std::false_type {};
+
 template <template <class , class > class T, class Un, class Deux>
 struct is_map<   T,
                 typename void_if_valide<typename std::enable_if<
@@ -124,9 +158,8 @@ struct is_map<   T,
                                                                 >::type
                                         >::type
             >  : std::true_type {};
+
 */
-
-
 
 
 template <class T, class U = void, class V = void>

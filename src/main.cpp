@@ -4,9 +4,9 @@
 #include <typeinfo>
 #include <type_traits> 
 #include "traits.hpp"
-#include "fonction_conteneur.hpp"
-#include <set>
 
+#include <set>
+#include <unordered_map>
 
 
 #include <boost/core/demangle.hpp>
@@ -26,9 +26,24 @@ using boost::core::demangle;
 template<class T>
 decltype(auto) foo(T&& t) { return t; }
 
+template < class R, class TT, class U, class Lapin> 
+struct b {};
+
 int main() //int argc, char** argv)
 {
+	is_map<std::map<int,double>> d;
+	is_map<std::map<int,int>> dd;
+	is_map<std::unordered_map<int,int>> ded;
 	
+	
+	is_map<const std::unordered_map<int,int>> deddfsdf;
+	
+	is_map<std::unordered_map<int,int> &> dessd;
+	is_map<b<int,int,int,int>> qsdf;
+	/*
+	std::pair<int,int> a, b ;
+	
+	cout << " compraison de deux paire de int " << ( a == b )<< endl; ;
     cout << endl << endl << " test contain " << endl << endl; 
     
     std::set<int> s = { 1 , 4 , 5, 6 , 5 };
